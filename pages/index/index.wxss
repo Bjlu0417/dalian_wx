@@ -1,0 +1,57 @@
+/* 整体容器样式（背景图片由 inline style 设置） */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* 按钮基础样式：圆角、阴影、白色文字 */
+button {
+  position: relative;
+  z-index: 1;
+  margin: 20px;
+  width: 240px;
+  padding: 15px 0;
+  background: #fff;
+  color: #fff;             /* 按钮文字设置为白色 */
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;     /* 圆角效果 */
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* 利用伪元素实现边框渐变动画 */
+button::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 32px;     
+  background: linear-gradient(45deg, #00c6ff, #0072ff, #00c6ff);
+  background-size: 300%;
+  z-index: -1;
+  animation: gradientAnimation 10s linear infinite;
+}
+
+/* 定义渐变动画关键帧 */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

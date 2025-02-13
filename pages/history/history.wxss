@@ -1,0 +1,36 @@
+.container {
+  padding: 20px;
+  text-align: left; /* 内容居左 */
+}
+
+.record-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  text-align: left; /* 内容居左 */
+}
+
+.finas {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.time {
+  color: #666;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.preview {
+  color: #007AFF;
+  display: block;
+}
+
+/* 注释样式 */
+.comment {
+  margin-top: 20px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}

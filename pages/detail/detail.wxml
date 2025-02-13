@@ -1,0 +1,11 @@
+<view class="container">
+  <text class="finas">车辆Finas号: {{finas}}</text>
+  <view class="record-list">
+    <block wx:for="{{records}}" wx:key="index">
+      <view class="record-item">
+        <text>{{item.time}}</text>
+        <text>{{item.description}}</text>
+      </view>
+    </block>
+  </view>
+</view>

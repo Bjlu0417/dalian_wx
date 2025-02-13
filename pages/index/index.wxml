@@ -1,0 +1,5 @@
+<view class="container" style="background-image: url('/images/index_bg.png'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
+  <button bindtap="createNew">新建</button>
+  <button bindtap="viewHistory">回看</button>
+</view>
+

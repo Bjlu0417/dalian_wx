@@ -1,0 +1,16 @@
+.container {
+  padding: 20px;
+}
+.finas {
+  font-weight: bold;
+  margin-bottom: 20px;
+  display: block;
+}
+.record-list {
+  margin-bottom: 20px;
+}
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}

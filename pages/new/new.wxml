@@ -1,0 +1,210 @@
+<!-- 固定顶部的记录显示区域 -->
+<view class="fixed-top">
+  <!-- 记录窗口头部：点击切换展开/收起 -->
+  <view class="record-header" bindtap="toggleRecords">
+    <text class="record-header-title">Record</text>
+    <text class="record-header-toggle">{{ recordsExpanded ? '↓' : '←' }}</text>
+  </view>
+  <!-- 当展开时显示记录列表 -->
+  <block wx:if="{{recordsExpanded}}">
+    <view class="record-list">
+      <block wx:for="{{records}}" wx:key="index">
+        <view class="record-item">
+          <text class="record-time">{{item.time}}</text>
+          <text class="record-desc">{{item.description}}</text>
+        </view>
+      </block>
+    </view>
+  </block>
+</view>
+
+<!-- 主内容区域 -->
+<scroll-view class="scroll-container" scroll-y="true">
+  <!-- 输入区域 -->
+  <input class="finas-input" placeholder="Enter Vehicle Finas" bindinput="inputFinas" />
+
+  <!-- 标签选择区域 -->
+  <view class="tag-area">
+    <!-- 标签头部：点击切换整体标签区域展开/收起 -->
+    <view class="tag-header" bindtap="toggleTags">
+      <text class="title">Choose Tags for New Event</text>
+      <text class="toggle">{{ tagsExpanded ? '↓' : '←' }}</text>
+    </view>
+    
+    <!-- 当 tagsExpanded 为 true 时显示各分组 -->
+    <block wx:if="{{tagsExpanded}}">
+      <!-- TSA/ETSA 分组 -->
+      <view class="group">
+        <view class="group-header" data-group="TSA" bindtap="toggleGroup">
+          <text class="group-title">TSA/ETSA</text>
+          <text class="group-toggle">{{ groupExpand.TSA ? '↓' : '←' }}</text>
+        </view>
+        <block wx:if="{{groupExpand.TSA}}">
+          <view class="btn-group">
+            <view class="action-button {{selectedTags['FN Ramp Speedlimit'] ? 'selected' : 'unselected'}}"
+                  data-text="FN Ramp Speedlimit" 
+                  bindtap="toggleTag">
+              FN Ramp Speedlimit
+            </view>
+            <view class="action-button {{selectedTags['FN Highway Speedlimit'] ? 'selected' : 'unselected'}}"
+                  data-text="FN Highway Speedlimit" 
+                  bindtap="toggleTag">
+              FN Highway Speedlimit
+            </view>
+            <view class="action-button {{selectedTags['Wrong SL at Gantry'] ? 'selected' : 'unselected'}}"
+                  data-text="Wrong SL at Gantry" 
+                  bindtap="toggleTag">
+              Wrong SL at Gantry
+            </view>
+            <view class="action-button {{selectedTags['Incorrect transition SL'] ? 'selected' : 'unselected'}}"
+                  data-text="Incorrect transition SL" 
+                  bindtap="toggleTag">
+              Incorrect transition SL
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <!-- L2 Driving 分组 -->
+      <view class="group">
+        <view class="group-header" data-group="L2Driving" bindtap="toggleGroup">
+          <text class="group-title">L2 Driving</text>
+          <text class="group-toggle">{{ groupExpand.L2Driving ? '↓' : '←' }}</text>
+        </view>
+        <block wx:if="{{groupExpand.L2Driving}}">
+          <view class="sub-groups">
+            <!-- ACC 子分组 -->
+            <view class="sub-group">
+              <text class="sub-group-title">ACC</text>
+              <view class="btn-group">
+                <view class="action-button {{selectedTags['ACC 1'] ? 'selected' : 'unselected'}}"
+                      data-text="ACC 1" 
+                      bindtap="toggleTag">
+                  ACC 1
+                </view>
+                <view class="action-button {{selectedTags['ACC 2'] ? 'selected' : 'unselected'}}"
+                      data-text="ACC 2" 
+                      bindtap="toggleTag">
+                  ACC 2
+                </view>
+                <view class="action-button {{selectedTags['ACC 3'] ? 'selected' : 'unselected'}}"
+                      data-text="ACC 3" 
+                      bindtap="toggleTag">
+                  ACC 3
+                </view>
+                <view class="action-button {{selectedTags['ACC 4'] ? 'selected' : 'unselected'}}"
+                      data-text="ACC 4" 
+                      bindtap="toggleTag">
+                  ACC 4
+                </view>
+              </view>
+            </view>
+            <!-- ALSA 子分组 -->
+            <view class="sub-group">
+              <text class="sub-group-title">ALSA</text>
+              <view class="btn-group">
+                <view class="action-button {{selectedTags['ALSA 1'] ? 'selected' : 'unselected'}}"
+                      data-text="ALSA 1" 
+                      bindtap="toggleTag">
+                  ALSA 1
+                </view>
+                <view class="action-button {{selectedTags['ALSA 2'] ? 'selected' : 'unselected'}}"
+                      data-text="ALSA 2" 
+                      bindtap="toggleTag">
+                  ALSA 2
+                </view>
+                <view class="action-button {{selectedTags['ALSA 3'] ? 'selected' : 'unselected'}}"
+                      data-text="ALSA 3" 
+                      bindtap="toggleTag">
+                  ALSA 3
+                </view>
+                <view class="action-button {{selectedTags['ALSA 4'] ? 'selected' : 'unselected'}}"
+                      data-text="ALSA 4" 
+                      bindtap="toggleTag">
+                  ALSA 4
+                </view>
+              </view>
+            </view>
+            <!-- ALCA 子分组 -->
+            <view class="sub-group">
+              <text class="sub-group-title">ALCA</text>
+              <view class="btn-group">
+                <view class="action-button {{selectedTags['ALCA 1'] ? 'selected' : 'unselected'}}"
+                      data-text="ALCA 1" 
+                      bindtap="toggleTag">
+                  ALCA 1
+                </view>
+                <view class="action-button {{selectedTags['ALCA 2'] ? 'selected' : 'unselected'}}"
+                      data-text="ALCA 2" 
+                      bindtap="toggleTag">
+                  ALCA 2
+                </view>
+                <view class="action-button {{selectedTags['ALCA 3'] ? 'selected' : 'unselected'}}"
+                      data-text="ALCA 3" 
+                      bindtap="toggleTag">
+                  ALCA 3
+                </view>
+                <view class="action-button {{selectedTags['ALCA 4'] ? 'selected' : 'unselected'}}"
+                      data-text="ALCA 4" 
+                      bindtap="toggleTag">
+                  ALCA 4
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <!-- L2+ Driving 分组 -->
+      <view class="group">
+        <view class="group-header" data-group="L2PlusDriving" bindtap="toggleGroup">
+          <text class="group-title">L2+ Driving</text>
+          <text class="group-toggle">{{ groupExpand.L2PlusDriving ? '↓' : '←' }}</text>
+        </view>
+        <block wx:if="{{groupExpand.L2PlusDriving}}">
+          <view class="btn-group">
+            <view class="action-button {{selectedTags['L2+ Dummy 1'] ? 'selected' : 'unselected'}}"
+                  data-text="L2+ Dummy 1" 
+                  bindtap="toggleTag">
+              L2+ Dummy 1
+            </view>
+            <view class="action-button {{selectedTags['L2+ Dummy 2'] ? 'selected' : 'unselected'}}"
+                  data-text="L2+ Dummy 2" 
+                  bindtap="toggleTag">
+              L2+ Dummy 2
+            </view>
+            <view class="action-button {{selectedTags['L2+ Dummy 3'] ? 'selected' : 'unselected'}}"
+                  data-text="L2+ Dummy 3" 
+                  bindtap="toggleTag">
+              L2+ Dummy 3
+            </view>
+            <view class="action-button {{selectedTags['L2+ Dummy 4'] ? 'selected' : 'unselected'}}"
+                  data-text="L2+ Dummy 4" 
+                  bindtap="toggleTag">
+              L2+ Dummy 4
+            </view>
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+</scroll-view>
+
+<!-- 固定底部区域 -->
+<view class="fixed-bottom">
+  <view class="voice-area">
+    <view class="voice-input-container">
+      <input class="voice-input" placeholder="Audio Text Shown here" value="{{transcribedText}}" bindinput="updateTranscribedText" />
+      <!-- 根据 isRecording 状态动态添加 recording-bg 类 -->
+      <view class="voice-button {{isRecording ? 'recording-bg' : ''}}" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        <!-- 使用 Base64 转换后的 SVG 声波图标 -->
+        <image class="mic-icon" src="{{voiceIcon}}" mode="widthFix"></image>
+      </view>
+    </view>
+  </view>
+  <view class="bottom-area">
+    <view class="add-button" bindtap="addRecord">Trigger Event</view>
+    <view class="save-button" bindtap="saveRecord">Save</view>
+    <view class="output-btn" bindtap="output">Download</view>
+  </view>
+</view>

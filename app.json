@@ -1,0 +1,22 @@
+{
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.6",
+      "provider": "wx069ba97219f66d99"
+    }
+  },
+  "pages": [
+    "pages/index/index",
+    "pages/new/new",
+    "pages/history/history",
+    "pages/detail/detail"
+  ],
+  "window": {
+    "navigationBarTitleText": "测试记录小程序"
+  },
+  "permission": {
+    "scope.record": {
+      "desc": "需要录音权限"
+    }
+  }
+}

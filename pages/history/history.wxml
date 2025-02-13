@@ -1,0 +1,14 @@
+<view class="container">
+  <block wx:for="{{records}}" wx:key="index">
+    <view class="record-item" bindtap="editRecord" data-index="{{index}}">
+      <text class="finas">车辆Finas号: {{item.finas}}</text>
+      <text class="time">记录时间: {{item.records[0].time}} - {{item.records[item.records.length - 1].time}}</text>
+      <text class="preview">点击编辑</text>
+    </view>
+  </block>
+
+  <!-- 添加注释 -->
+  <view class="comment">
+    <text>历史记录只保留最近三天</text>
+  </view>
+</view>
