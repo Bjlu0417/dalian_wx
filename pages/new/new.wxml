@@ -3,7 +3,7 @@
   <!-- 记录窗口头部：点击切换展开/收起 -->
   <view class="record-header" bindtap="toggleRecords">
     <text class="record-header-title">Record</text>
-    <text class="record-header-toggle">{{ recordsExpanded ? '↓' : '←' }}</text>
+    <text class="record-header-toggle">{{ recordsExpanded ? '👇' : '👈' }}</text>
   </view>
   <!-- 当展开时显示记录列表 -->
   <block wx:if="{{recordsExpanded}}">
@@ -77,17 +77,17 @@
             <view class="sub-group">
               <text class="sub-group-title">ACC</text>
               <view class="btn-group">
-                <view class="action-button {{selectedTags['ACC 1'] ? 'selected' : 'unselected'}}"
-                      data-text="ACC 1" 
+                <view class="action-button {{selectedTags['FP brake'] ? 'selected' : 'unselected'}}"
+                      data-text="FP brake" 
                       bindtap="toggleTag">
-                  ACC 1
+                  FP brake
                 </view>
-                <view class="action-button {{selectedTags['ACC 2'] ? 'selected' : 'unselected'}}"
-                      data-text="ACC 2" 
+                <view class="action-button {{selectedTags['Close cut-in'] ? 'selected' : 'unselected'}}"
+                      data-text="Close cut-in" 
                       bindtap="toggleTag">
-                  ACC 2
+                  Close cut-in
                 </view>
-                <view class="action-button {{selectedTags['ACC 3'] ? 'selected' : 'unselected'}}"
+                <view class="action-button {{selectedTags[''] ? 'selected' : 'unselected'}}"
                       data-text="ACC 3" 
                       bindtap="toggleTag">
                   ACC 3
@@ -103,15 +103,15 @@
             <view class="sub-group">
               <text class="sub-group-title">ALSA</text>
               <view class="btn-group">
-                <view class="action-button {{selectedTags['ALSA 1'] ? 'selected' : 'unselected'}}"
-                      data-text="ALSA 1" 
+                <view class="action-button {{selectedTags['wrong bias'] ? 'selected' : 'unselected'}}"
+                      data-text="wrong bias" 
                       bindtap="toggleTag">
-                  ALSA 1
+                  Wrong bias
                 </view>
-                <view class="action-button {{selectedTags['ALSA 2'] ? 'selected' : 'unselected'}}"
-                      data-text="ALSA 2" 
+                <view class="action-button {{selectedTags['handsoff'] ? 'selected' : 'unselected'}}"
+                      data-text="handsoff" 
                       bindtap="toggleTag">
-                  ALSA 2
+                  handsoff
                 </view>
                 <view class="action-button {{selectedTags['ALSA 3'] ? 'selected' : 'unselected'}}"
                       data-text="ALSA 3" 
@@ -129,15 +129,15 @@
             <view class="sub-group">
               <text class="sub-group-title">ALCA</text>
               <view class="btn-group">
-                <view class="action-button {{selectedTags['ALCA 1'] ? 'selected' : 'unselected'}}"
-                      data-text="ALCA 1" 
+                <view class="action-button {{selectedTags['FP overtake'] ? 'selected' : 'unselected'}}"
+                      data-text="FP overtake" 
                       bindtap="toggleTag">
-                  ALCA 1
+                  FP overtake
                 </view>
-                <view class="action-button {{selectedTags['ALCA 2'] ? 'selected' : 'unselected'}}"
-                      data-text="ALCA 2" 
+                <view class="action-button {{selectedTags['FN lane ends'] ? 'selected' : 'unselected'}}"
+                      data-text="FN lane ends" 
                       bindtap="toggleTag">
-                  ALCA 2
+                  FN lane ends
                 </view>
                 <view class="action-button {{selectedTags['ALCA 3'] ? 'selected' : 'unselected'}}"
                       data-text="ALCA 3" 
@@ -163,25 +163,25 @@
         </view>
         <block wx:if="{{groupExpand.L2PlusDriving}}">
           <view class="btn-group">
-            <view class="action-button {{selectedTags['L2+ Dummy 1'] ? 'selected' : 'unselected'}}"
-                  data-text="L2+ Dummy 1" 
+            <view class="action-button {{selectedTags['FP Lane Change'] ? 'selected' : 'unselected'}}"
+                  data-text="FP Lane Change" 
                   bindtap="toggleTag">
-              L2+ Dummy 1
+              FP Lane Change
             </view>
-            <view class="action-button {{selectedTags['L2+ Dummy 2'] ? 'selected' : 'unselected'}}"
-                  data-text="L2+ Dummy 2" 
+            <view class="action-button {{selectedTags['FN Lane Change'] ? 'selected' : 'unselected'}}"
+                  data-text="FN Lane Change" 
                   bindtap="toggleTag">
-              L2+ Dummy 2
+              FN Lane Change
             </view>
-            <view class="action-button {{selectedTags['L2+ Dummy 3'] ? 'selected' : 'unselected'}}"
-                  data-text="L2+ Dummy 3" 
+            <view class="action-button {{selectedTags['ACC fault'] ? 'selected' : 'unselected'}}"
+                  data-text="ACC fault" 
                   bindtap="toggleTag">
-              L2+ Dummy 3
+              ACC fault
             </view>
-            <view class="action-button {{selectedTags['L2+ Dummy 4'] ? 'selected' : 'unselected'}}"
-                  data-text="L2+ Dummy 4" 
+            <view class="action-button {{selectedTags['ALSA fault'] ? 'selected' : 'unselected'}}"
+                  data-text="ALSA fault" 
                   bindtap="toggleTag">
-              L2+ Dummy 4
+              ALSA fault
             </view>
           </view>
         </block>
@@ -197,8 +197,6 @@
       <input class="voice-input" placeholder="Audio Text Shown here" value="{{transcribedText}}" bindinput="updateTranscribedText" />
       <!-- 根据 isRecording 状态动态添加 recording-bg 类 -->
       <view class="voice-button {{isRecording ? 'recording-bg' : ''}}" bindtouchstart="touchStart" bindtouchend="touchEnd">
-        <!-- 使用 Base64 转换后的 SVG 声波图标 -->
-        <image class="mic-icon" src="{{voiceIcon}}" mode="widthFix"></image>
       </view>
     </view>
   </view>

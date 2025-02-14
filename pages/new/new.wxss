@@ -244,6 +244,11 @@ view, input {
   background-color: #007aff;
   border-radius: 20px;
   padding: 3px;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0iTTEyIDE0cS0xLjI1IDAtMi4xMjUtLjg3NVQ5IDExVjVxMC0xLjI1Ljg3NS0yLjEyNVQxMiAydDIuMTI1Ljg3NVQxNSA1djZxMCAxLjI1LS44NzUgMi4xMjVUMTIgMTRtLTEgN3YtMy4wNzVxLTIuNi0uMzUtNC4zLTIuMzI1VDUgMTFoMnEwIDIuMDc1IDEuNDYzIDMuNTM4VDEyIDE2dDMuNTM4LTEuNDYzVDE3IDExaDJxMCAyLjYyNS0xLjcgNC42VDEzIDE3LjkyNVYyMXoiLz48L3N2Zz4=);
+  background-repeat: no-repeat;
+  background-position: 20rpx center; /* 图标位置 */
+  background-size: 40rpx 40rpx;
+  padding-left: 1rpx;
 }
 
 /* 当正在录音时，背景改为灰色 */
