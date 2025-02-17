@@ -1,12 +1,22 @@
 .container {
-  padding: 20px;
+  width: 100%;
+  height: auto;
   text-align: left; /* 内容居左 */
 }
 
+h1 {
+  width: 100%;
+  font-weight: bold;
+  font-size: x-large;
+  text-align: left;
+}
 .record-item {
+  width: 100%;
+  height: auto;
   margin-bottom: 20px;
+  margin-left: 20;
   border-bottom: 1px solid #ccc;
-  padding-bottom: 10px;
+  padding: 10px;
   text-align: left; /* 内容居左 */
 }
 
@@ -20,11 +30,20 @@
   color: #666;
   display: block;
   margin-bottom: 5px;
+  text-align: left;
+}
+
+.button-container{
+  width: 50%;
+  justify-content: right;
+  display: flex;
+  gap: 10px;
 }
 
 .preview {
+  font-size: smaller;
   color: #007AFF;
-  display: block;
+  display: inline;
 }
 
 /* 注释样式 */

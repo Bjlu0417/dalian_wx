@@ -35,7 +35,7 @@ view, input {
   border-bottom: 1px solid #eee;
 }
 .record-header-title {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
 }
 .record-header-toggle {
@@ -50,6 +50,9 @@ view, input {
   padding: 15px;
   margin: 0 10px 10px 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  height: 200px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .record-item {
   display: flex;
@@ -62,12 +65,13 @@ view, input {
 }
 .record-time {
   color: #333;
+  font-size: 12px;
   font-weight: bold;
-  font-size: 16px;
 }
 .record-desc {
   color: #666;
-  font-size: 16px;
+  font-size: 12px;
+  text-align: left;
 }
 
 /* 修改 scroll-view 的顶部内边距，留出固定顶部区域的空间 */
@@ -120,7 +124,7 @@ view, input {
   cursor: pointer;
 }
 .title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 15px;
   text-align: center;
@@ -145,12 +149,12 @@ view, input {
   cursor: pointer;
 }
 .group-title {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   color: #007aff;
 }
 .group-toggle {
-  font-size: 20px;
+  font-size: 15px;
   color: #007aff;
 }
 .btn-group {
@@ -195,7 +199,7 @@ view, input {
   margin-top: 10px;
 }
 .sub-group-title {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
   color: #007aff;
   margin-bottom: 5px;

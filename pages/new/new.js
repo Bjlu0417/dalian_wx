@@ -102,12 +102,11 @@ Page({
       tagPart = tagPart.slice(0, -2) + ' ';
     }
     const descriptionText = this.data.transcribedText || '';
-    const description = tagPart + (descriptionText ? descriptionText : '无描述');
+    const description = tagPart + (descriptionText ? descriptionText : '');
     let records = this.data.records;
     if (this.data.isFirstRecord) {
       const date = this.getCurrentDate();
-      records.push({ time: date, description: '' });
-      records.push({ time: `Finas号: ${this.data.finas}`, description: '' });
+      records.push({ time: `${date} Finas: ${this.data.finas} `, description: '' });
       this.setData({ isFirstRecord: false });
     }
     records.push({ time, description });
@@ -155,13 +154,13 @@ Page({
   saveRecord() {
     const key = 'record_' + new Date().toLocaleString();
     wx.setStorageSync(key, { finas: this.data.finas, records: this.data.records });
-    wx.showToast({ title: '保存成功', icon: 'success' });
+    wx.showToast({ title: 'success', icon: 'success' });
   },
 
   // 输出记录（复制或分享）
   output() {
     wx.showActionSheet({
-      itemList: ['复制到剪贴板', '使用分享功能'],
+      itemList: ['Copy to clipboard', 'Share to Wechat'],
       success: (res) => {
         if (res.tapIndex === 0) {
           const recordsText = this.data.records
@@ -170,11 +169,11 @@ Page({
           wx.setClipboardData({
             data: recordsText,
             success: () => {
-              wx.showToast({ title: '复制成功', icon: 'success' });
+              wx.showToast({ title: 'copied', icon: 'success' });
             }
           });
         } else if (res.tapIndex === 1) {
-          wx.showToast({ title: '请点击右上角转发', icon: 'none' });
+          wx.showToast({ title: 'Please click on the top right corner to forward.', icon: 'none' });
           wx.showShareMenu({ withShareTicket: true });
         }
       }

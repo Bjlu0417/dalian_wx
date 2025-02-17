@@ -2,7 +2,7 @@
 <view class="fixed-top">
   <!-- 记录窗口头部：点击切换展开/收起 -->
   <view class="record-header" bindtap="toggleRecords">
-    <text class="record-header-title">Record</text>
+    <text class="record-header-title">Records</text>
     <text class="record-header-toggle">{{ recordsExpanded ? '👇' : '👈' }}</text>
   </view>
   <!-- 当展开时显示记录列表 -->
@@ -28,7 +28,6 @@
     <!-- 标签头部：点击切换整体标签区域展开/收起 -->
     <view class="tag-header" bindtap="toggleTags">
       <text class="title">Choose Tags for New Event</text>
-      <text class="toggle">{{ tagsExpanded ? '↓' : '←' }}</text>
     </view>
     
     <!-- 当 tagsExpanded 为 true 时显示各分组 -->

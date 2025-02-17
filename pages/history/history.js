@@ -56,6 +56,33 @@ Page({
     });
   },
 
+  // 弹出删除记录确认
+  // 删除选中的记录
+  deleteRecord(e) {
+    const index = e.currentTarget.dataset.index;
+    const record = this.data.records[index];
+    wx.showModal({
+      title: 'Delete record?',
+      content: 'Record deletion is not recoverable!',
+      complete: (res) => {
+       if (res.confirm) {
+          this.comfirmDeletion(index)
+        }
+      }
+    })
+  },
+
+  comfirmDeletion(id){
+    const newRecords = this.data.records.filter((item) => item.index!==id)
+    this.setData({
+      records: newRecords,
+    })
+    wx.showToast({
+      title: 'Deleted',
+      icon: 'success',
+    })
+  },
+
   // 下拉刷新
   onPullDownRefresh() {
     this.loadRecords(); // 重新加载历史记录

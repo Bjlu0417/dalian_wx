@@ -1,9 +1,12 @@
 <view class="container">
+  <h1>Saved drives:</h1>
   <block wx:for="{{records}}" wx:key="index">
-    <view class="record-item" bindtap="editRecord" data-index="{{index}}">
-      <text class="finas">车辆Finas号: {{item.finas}}</text>
-      <text class="time">记录时间: {{item.records[0].time}} - {{item.records[item.records.length - 1].time}}</text>
-      <text class="preview">点击编辑</text>
+    <view class="record-item" data-index="{{index}}">
+      <text class="time">Drive {{index+1}}: {{item.records[0].time}}</text>
+      <view class="button-container">
+        <button class="preview" data-index="{{index}}" bindtap="editRecord">Edit</button>
+        <button class="preview" data-index="{{index}}" bindtap="deleteRecord">Delete</button>
+      </view>
     </view>
   </block>
 
