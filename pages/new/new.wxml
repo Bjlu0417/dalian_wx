@@ -201,7 +201,7 @@
     </view>
   </view>
   <view class="bottom-area">
-    <view class="add-button" bindtap="addRecord">Trigger Event</view>
+    <view class="add-button" bindtap="addRecord">DaDian</view>
     <view class="save-button" bindtap="saveRecord">Save</view>
     <view class="output-btn" bindtap="output">Download</view>
   </view>
