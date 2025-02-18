@@ -28,8 +28,11 @@ Page({
   onLoad(options) {
     // 如果从分享链接传入记录数据，则解析显示
     if (options.records) {
-      const recordsText = decodeURIComponent(options.records);
-      this.setData({ records: [{ time: '', description: recordsText }] });
+      const records = JSON.parse(decodeURIComponent(options.records));  // 解码并解析
+      this.setData({ records });
+    }
+    if (options.finas) {
+      this.setData({ finas: options.finas });
     }
     // 模拟获取 openid（实际请在登录流程中获取）
     this.setData({ openid: 'your-openid-here' });

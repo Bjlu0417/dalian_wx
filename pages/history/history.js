@@ -57,7 +57,6 @@ Page({
   },
 
   // 弹出删除记录确认
-  // 删除选中的记录
   deleteRecord(e) {
     const index = e.currentTarget.dataset.index;
     const record = this.data.records[index];
@@ -65,22 +64,30 @@ Page({
       title: 'Delete record?',
       content: 'Record deletion is not recoverable!',
       complete: (res) => {
-       if (res.confirm) {
-          this.comfirmDeletion(index)
+        if (res.confirm) {
+          this.confirmDeletion(index, record.key);  // 传入记录的 key
         }
       }
-    })
+    });
   },
 
-  comfirmDeletion(id){
-    const newRecords = this.data.records.filter((item) => item.index!==id)
+  // 确认删除操作
+  confirmDeletion(index, key) {
+    // 从 records 中删除指定记录
+    const newRecords = this.data.records.filter((item, i) => i !== index);
+
+    // 删除本地存储中的记录
+    wx.removeStorageSync(key);
+
+    // 更新页面上的记录列表
     this.setData({
       records: newRecords,
-    })
+    });
+
     wx.showToast({
       title: 'Deleted',
       icon: 'success',
-    })
+    });
   },
 
   // 下拉刷新
