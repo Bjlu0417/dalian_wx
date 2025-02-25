@@ -1,5 +1,3 @@
-const plugin = requirePlugin('WechatSI');
-
 Page({
   data: {
     finas: '',               // 车辆 Finas 号
@@ -11,6 +9,8 @@ Page({
     isRecording: false,      // 是否正在录音
     isTranscribing: false,   // 是否正在转译
     recorderManager: null,   // 录音管理器
+    isEditing: false,        // 是否处于编辑模式
+    key: '',                 // 编辑记录时传入的 key
     // 分组的展开状态，默认全部收起
     groupExpand: {
       TSA: false,
@@ -34,10 +34,18 @@ Page({
     if (options.finas) {
       this.setData({ finas: options.finas });
     }
+    // 如果有 key 参数，则认为是编辑模式
+    if (options.key) {
+      this.setData({
+        key: options.key,
+        isEditing: true
+      });
+    }
     // 模拟获取 openid（实际请在登录流程中获取）
     this.setData({ openid: 'your-openid-here' });
 
     // 初始化录音管理器
+    const plugin = requirePlugin('WechatSI');
     this.setData({
       recorderManager: plugin.getRecordRecognitionManager()
     });
@@ -74,52 +82,6 @@ Page({
     reader.readAsDataURL(blob);
   },
 
-  // 输入车辆 Finas 号
-  inputFinas(e) {
-    this.setData({ finas: e.detail.value });
-  },
-
-  // 切换标签选中状态
-  toggleTag(e) {
-    const tag = e.currentTarget.dataset.text;
-    let selectedTags = this.data.selectedTags;
-    selectedTags[tag] = !selectedTags[tag];
-    this.setData({ selectedTags });
-  },
-
-  // 更新语音转文字结果
-  updateTranscribedText(e) {
-    this.setData({ transcribedText: e.detail.value });
-  },
-
-  // 添加打点记录，将语音结果与标签合并
-  addRecord() {
-    const time = this.getCurrentTime24();
-    let tagPart = '';
-    for (let tag in this.data.selectedTags) {
-      if (this.data.selectedTags[tag]) {
-        tagPart += tag + ', ';
-      }
-    }
-    if (tagPart) {
-      tagPart = tagPart.slice(0, -2) + ' ';
-    }
-    const descriptionText = this.data.transcribedText || '';
-    const description = tagPart + (descriptionText ? descriptionText : '');
-    let records = this.data.records;
-    if (this.data.isFirstRecord) {
-      const date = this.getCurrentDate();
-      records.push({ time: `${date} Finas: ${this.data.finas} `, description: '' });
-      this.setData({ isFirstRecord: false });
-    }
-    records.push({ time, description });
-    this.setData({
-      records,
-      transcribedText: '',
-      selectedTags: {}
-    });
-  },
-
   // 获取当前日期 YYYY-MM-DD
   getCurrentDate() {
     const now = new Date();
@@ -138,7 +100,53 @@ Page({
     return `${hours}:${minutes}:${seconds}`;
   },
 
-  // 语音录音开始
+  // 添加打点记录：在编辑模式下，追加新记录；否则新建时记录第一条包含车辆信息的记录
+  addRecord() {
+    const time = this.getCurrentTime24();
+    let tagPart = '';
+    for (let tag in this.data.selectedTags) {
+      if (this.data.selectedTags[tag]) {
+        tagPart += tag + ', ';
+      }
+    }
+    if (tagPart) {
+      tagPart = tagPart.slice(0, -2) + ' ';
+    }
+    const descriptionText = this.data.transcribedText || '';
+    const description = tagPart + (descriptionText ? descriptionText : '');
+    let records = this.data.records;
+
+    if (this.data.isEditing) {
+      // 编辑模式下直接追加记录
+      records.push({ time, description });
+    } else {
+      // 新建模式下：如果是第一次记录，先添加包含车辆信息的记录
+      if (this.data.isFirstRecord) {
+        const date = this.getCurrentDate();
+        records.push({ time: `${date} Finas: ${this.data.finas}`, description: '' });
+        this.setData({ isFirstRecord: false });
+      }
+      records.push({ time, description });
+    }
+
+    this.setData({
+      records,
+      transcribedText: '',
+      selectedTags: {}
+    });
+  },
+
+  // 保存记录到本地缓存：编辑模式下更新原记录，否则新建记录
+  saveRecord() {
+    let key = this.data.key;
+    if (!this.data.isEditing) {
+      key = 'record_' + new Date().toLocaleString();
+    }
+    wx.setStorageSync(key, { finas: this.data.finas, records: this.data.records });
+    wx.showToast({ title: '保存成功', icon: 'success' });
+  },
+
+  // 录音相关函数
   touchStart() {
     this.setData({ isRecording: true, isTranscribing: true });
     this.data.recorderManager.start({
@@ -146,21 +154,24 @@ Page({
       lang: 'zh_CN'
     });
   },
-
-  // 语音录音结束
   touchEnd() {
     this.setData({ isRecording: false });
     this.data.recorderManager.stop();
   },
 
-  // 保存记录到本地缓存
-  saveRecord() {
-    const key = 'record_' + new Date().toLocaleString();
-    wx.setStorageSync(key, { finas: this.data.finas, records: this.data.records });
-    wx.showToast({ title: 'success', icon: 'success' });
+  // 其他函数保持不变……
+  inputFinas(e) {
+    this.setData({ finas: e.detail.value });
   },
-
-  // 输出记录（复制或分享）
+  toggleTag(e) {
+    const tag = e.currentTarget.dataset.text;
+    let selectedTags = this.data.selectedTags;
+    selectedTags[tag] = !selectedTags[tag];
+    this.setData({ selectedTags });
+  },
+  updateTranscribedText(e) {
+    this.setData({ transcribedText: e.detail.value });
+  },
   output() {
     wx.showActionSheet({
       itemList: ['Copy to clipboard', 'Share to Wechat'],
@@ -182,8 +193,6 @@ Page({
       }
     });
   },
-
-  // 配置分享功能，将记录内容作为分享标题及参数传递
   onShareAppMessage() {
     const recordsText = this.data.records
       .map(r => `${r.time}: ${r.description}`)
@@ -194,21 +203,15 @@ Page({
       path: '/pages/index/index?records=' + encodeURIComponent(recordsText)
     };
   },
-
-  // 切换整个标签区域的展开/收起状态
   toggleTags() {
     this.setData({ tagsExpanded: !this.data.tagsExpanded });
   },
-
-  // 切换分组展开状态
   toggleGroup(e) {
     const group = e.currentTarget.dataset.group;
     let groupExpand = this.data.groupExpand;
     groupExpand[group] = !groupExpand[group];
     this.setData({ groupExpand });
   },
-
-  // 切换固定顶部记录显示窗口的展开/收起状态
   toggleRecords() {
     this.setData({ recordsExpanded: !this.data.recordsExpanded });
   }
