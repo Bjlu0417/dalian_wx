@@ -44,7 +44,7 @@ Page({
     // 模拟获取 openid（实际请在登录流程中获取）
     this.setData({ openid: 'your-openid-here' });
 
-    // 初始化录音管理器
+    // 初始化录音管理器（使用 WechatSI 插件）
     const plugin = requirePlugin('WechatSI');
     this.setData({
       recorderManager: plugin.getRecordRecognitionManager()
@@ -146,32 +146,78 @@ Page({
     wx.showToast({ title: '保存成功', icon: 'success' });
   },
 
-  // 录音相关函数
-  touchStart() {
+  // 录音前先检查录音权限，然后启动录音
+  checkRecordPermissionAndStart() {
+    wx.getSetting({
+      success: (res) => {
+        // 检查录音权限是否已经授权
+        if (!res.authSetting['scope.record']) {
+          // 没有授权，调用 wx.authorize 请求权限
+          wx.authorize({
+            scope: 'scope.record',
+            success: () => {
+              // 授权成功后，启动录音
+              this.startRecording();
+            },
+            fail: () => {
+              // 用户拒绝授权时，给出提示并可引导用户到设置页面手动开启权限
+              wx.showModal({
+                title: '提示',
+                content: '录音功能需要获取您的录音权限，请前往设置页面开启权限。',
+                success: (res) => {
+                  if (res.confirm) {
+                    wx.openSetting();
+                  }
+                }
+              });
+            }
+          });
+        } else {
+          // 已经授权，可以直接启动录音
+          this.startRecording();
+        }
+      },
+      fail: (err) => {
+        console.error('获取设置失败', err);
+      }
+    });
+  },
+
+  // 启动录音
+  startRecording() {
     this.setData({ isRecording: true, isTranscribing: true });
     this.data.recorderManager.start({
       duration: 60000,
       lang: 'zh_CN'
     });
   },
+
+  // 录音相关函数
+  touchStart() {
+    // 调用权限检测函数
+    this.checkRecordPermissionAndStart();
+  },
+
   touchEnd() {
     this.setData({ isRecording: false });
     this.data.recorderManager.stop();
   },
 
-  // 其他函数保持不变……
   inputFinas(e) {
     this.setData({ finas: e.detail.value });
   },
+
   toggleTag(e) {
     const tag = e.currentTarget.dataset.text;
     let selectedTags = this.data.selectedTags;
     selectedTags[tag] = !selectedTags[tag];
     this.setData({ selectedTags });
   },
+
   updateTranscribedText(e) {
     this.setData({ transcribedText: e.detail.value });
   },
+
   output() {
     wx.showActionSheet({
       itemList: ['Copy to clipboard', 'Share to Wechat'],
@@ -193,6 +239,7 @@ Page({
       }
     });
   },
+
   onShareAppMessage() {
     const recordsText = this.data.records
       .map(r => `${r.time}: ${r.description}`)
@@ -203,15 +250,18 @@ Page({
       path: '/pages/index/index?records=' + encodeURIComponent(recordsText)
     };
   },
+
   toggleTags() {
     this.setData({ tagsExpanded: !this.data.tagsExpanded });
   },
+
   toggleGroup(e) {
     const group = e.currentTarget.dataset.group;
     let groupExpand = this.data.groupExpand;
     groupExpand[group] = !groupExpand[group];
     this.setData({ groupExpand });
   },
+
   toggleRecords() {
     this.setData({ recordsExpanded: !this.data.recordsExpanded });
   }
