@@ -48,15 +48,18 @@ view, input {
   background-color: #fff;
   border-radius: 6px;
   padding: 15px;
-  margin: 0 10px 10px 10px;
+  margin: 0 auto 10px auto;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  height: 200px;
+  max-height: 150px;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  width: 90%;
+  max-width: 350px;
 }
+
+/* 记录项 */
 .record-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   padding: 8px 0;
   border-bottom: 1px dashed #eee;
 }
@@ -67,14 +70,17 @@ view, input {
   color: #333;
   font-size: 12px;
   font-weight: bold;
+  margin-bottom: 4px;
 }
 .record-desc {
   color: #666;
   font-size: 12px;
   text-align: left;
+  word-break: break-all;
+  white-space: normal;
 }
 
-/* 修改 scroll-view 的顶部内边距，留出固定顶部区域的空间 */
+/* 主内容区域 */
 .scroll-container {
   flex: 1;
   overflow-y: auto;
@@ -94,7 +100,7 @@ view, input {
   display: block;
 }
 
-/* 输入框样式（语音输入框） */
+/* 语音输入框 */
 .voice-input {
   flex: 1;
   margin-right: 10px;
@@ -205,11 +211,11 @@ view, input {
   margin-bottom: 5px;
 }
 
-/* 固定底部区域（离底边 20px） */
+/* 固定底部区域，默认底部20px，通过动画上移时以 transform 控制 */
 .fixed-bottom {
   position: fixed;
-  bottom: 20px;
   left: 0;
+  bottom: 20px;
   width: 100%;
   background-color: #f5f7fa;
   z-index: 10;
@@ -226,7 +232,7 @@ view, input {
   text-align: center;
 }
 
-/* 新增：语音输入容器，左右排列 */
+/* 语音输入容器 */
 .voice-input-container {
   display: flex;
   flex-direction: row;
@@ -237,7 +243,7 @@ view, input {
   margin: 0 auto 10px auto;
 }
 
-/* 调整语音按钮为圆角矩形，图标上下居中 */
+/* 语音按钮 */
 .voice-button {
   display: flex;
   flex-direction: column;
@@ -250,24 +256,14 @@ view, input {
   padding: 3px;
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0iTTEyIDE0cS0xLjI1IDAtMi4xMjUtLjg3NVQ5IDExVjVxMC0xLjI1Ljg3NS0yLjEyNVQxMiAydDIuMTI1Ljg3NVQxNSA1djZxMCAxLjI1LS44NzUgMi4xMjVUMTIgMTRtLTEgN3YtMy4wNzVxLTIuNi0uMzUtNC4zLTIuMzI1VDUgMTFoMnEwIDIuMDc1IDEuNDYzIDMuNTM4VDEyIDE2dDMuNTM4LTEuNDYzVDE3IDExaDJxMCAyLjYyNS0xLjcgNC42VDEzIDE3LjkyNVYyMXoiLz48L3N2Zz4=);
   background-repeat: no-repeat;
-  background-position: 20rpx center; /* 图标位置 */
+  background-position: 20rpx center;
   background-size: 40rpx 40rpx;
   padding-left: 1rpx;
 }
 
-/* 当正在录音时，背景改为灰色 */
+/* 正在录音时背景改变 */
 .recording-bg {
   background-color: #ccc !important;
-}
-
-.mic-icon {
-  transition: stroke 0.3s;
-  width: 24px;
-  height: 24px;
-}
-
-.recording {
-  stroke: #FF4444;
 }
 
 /* 底部操作按钮 */

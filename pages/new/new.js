@@ -21,6 +21,10 @@ Page({
     tagsExpanded: true,
     // 固定顶部记录显示窗口的展开/收起状态，默认折叠
     recordsExpanded: false,
+    // scroll-view 的滚动位置（用于记录列表滚动到最底部）
+    recordScrollTop: 0,
+    // 动画对象数据，用于底部区域动画
+    animationData: {},
     // 声波图标（语音按钮）Base64 数据 URL
     voiceIcon: ''
   },
@@ -28,7 +32,7 @@ Page({
   onLoad(options) {
     // 如果从分享链接传入记录数据，则解析显示
     if (options.records) {
-      const records = JSON.parse(decodeURIComponent(options.records));  // 解码并解析
+      const records = JSON.parse(decodeURIComponent(options.records));
       this.setData({ records });
     }
     if (options.finas) {
@@ -63,6 +67,12 @@ Page({
       this.setData({ isRecording: false, isTranscribing: false });
     };
 
+    // 初始化动画对象，用于底部区域动画
+    this.animation = wx.createAnimation({
+      duration: 300,
+      timingFunction: 'ease-out'
+    });
+
     // 使用 Blob 和 FileReader 将 SVG 声波图标转换为 Base64 DataURL
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
       <rect x="4" y="22" width="6" height="20" fill="#fff"/>
@@ -80,6 +90,26 @@ Page({
       this.setData({ voiceIcon: dataUrl });
     };
     reader.readAsDataURL(blob);
+  },
+
+  // 输入框 focus 事件：当输入框获得焦点时，上移底部栏
+  onInputFocus(e) {
+    // 假设 e.detail.height 返回键盘高度；若无值则设为300px
+    const keyboardHeight = e.detail.height || 300;
+    // 默认底部栏距离屏幕底部为20px，因此上移距离 = keyboardHeight - 20
+    const offset = 20 - keyboardHeight;
+    this.animation.translateY(offset).step();
+    this.setData({
+      animationData: this.animation.export()
+    });
+  },
+
+  // 输入框 blur 事件：恢复底部栏到固定在屏幕底部（20px上）
+  onInputBlur(e) {
+    this.animation.translateY(0).step();
+    this.setData({
+      animationData: this.animation.export()
+    });
   },
 
   // 获取当前日期 YYYY-MM-DD
@@ -100,7 +130,7 @@ Page({
     return `${hours}:${minutes}:${seconds}`;
   },
 
-  // 添加打点记录：在编辑模式下，追加新记录；否则新建时记录第一条包含车辆信息的记录
+  // 添加打点记录：编辑模式下直接追加；否则新建记录时先添加车辆信息记录
   addRecord() {
     const time = this.getCurrentTime24();
     let tagPart = '';
@@ -117,10 +147,8 @@ Page({
     let records = this.data.records;
 
     if (this.data.isEditing) {
-      // 编辑模式下直接追加记录
       records.push({ time, description });
     } else {
-      // 新建模式下：如果是第一次记录，先添加包含车辆信息的记录
       if (this.data.isFirstRecord) {
         const date = this.getCurrentDate();
         records.push({ time: `${date} Finas: ${this.data.finas}`, description: '' });
@@ -136,7 +164,7 @@ Page({
     });
   },
 
-  // 保存记录到本地缓存：编辑模式下更新原记录，否则新建记录
+  // 保存记录到本地缓存
   saveRecord() {
     let key = this.data.key;
     if (!this.data.isEditing) {
@@ -146,40 +174,27 @@ Page({
     wx.showToast({ title: '保存成功', icon: 'success' });
   },
 
-  // 录音前先检查录音权限，然后启动录音
+  // 录音前检查权限并启动录音
   checkRecordPermissionAndStart() {
     wx.getSetting({
       success: (res) => {
-        // 检查录音权限是否已经授权
         if (!res.authSetting['scope.record']) {
-          // 没有授权，调用 wx.authorize 请求权限
           wx.authorize({
             scope: 'scope.record',
-            success: () => {
-              // 授权成功后，启动录音
-              this.startRecording();
-            },
+            success: () => { this.startRecording(); },
             fail: () => {
-              // 用户拒绝授权时，给出提示并可引导用户到设置页面手动开启权限
               wx.showModal({
                 title: '提示',
                 content: '录音功能需要获取您的录音权限，请前往设置页面开启权限。',
-                success: (res) => {
-                  if (res.confirm) {
-                    wx.openSetting();
-                  }
-                }
+                success: (res) => { if (res.confirm) wx.openSetting(); }
               });
             }
           });
         } else {
-          // 已经授权，可以直接启动录音
           this.startRecording();
         }
       },
-      fail: (err) => {
-        console.error('获取设置失败', err);
-      }
+      fail: (err) => { console.error('获取设置失败', err); }
     });
   },
 
@@ -194,7 +209,6 @@ Page({
 
   // 录音相关函数
   touchStart() {
-    // 调用权限检测函数
     this.checkRecordPermissionAndStart();
   },
 
@@ -228,9 +242,7 @@ Page({
             .join('\n');
           wx.setClipboardData({
             data: recordsText,
-            success: () => {
-              wx.showToast({ title: 'copied', icon: 'success' });
-            }
+            success: () => { wx.showToast({ title: 'copied', icon: 'success' }); }
           });
         } else if (res.tapIndex === 1) {
           wx.showToast({ title: 'Please click on the top right corner to forward.', icon: 'none' });
@@ -262,7 +274,14 @@ Page({
     this.setData({ groupExpand });
   },
 
+  // 切换记录窗口展开/收起，并自动滚动到底部
   toggleRecords() {
-    this.setData({ recordsExpanded: !this.data.recordsExpanded });
+    this.setData({ recordsExpanded: !this.data.recordsExpanded }, () => {
+      if (this.data.recordsExpanded) {
+        setTimeout(() => {
+          this.setData({ recordScrollTop: 9999 });
+        }, 100);
+      }
+    });
   }
 });

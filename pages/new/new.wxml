@@ -1,36 +1,28 @@
 <!-- 固定顶部的记录显示区域 -->
 <view class="fixed-top">
-  <!-- 记录窗口头部：点击切换展开/收起 -->
   <view class="record-header" bindtap="toggleRecords">
     <text class="record-header-title">Records</text>
     <text class="record-header-toggle">{{ recordsExpanded ? '👇' : '👈' }}</text>
   </view>
-  <!-- 当展开时显示记录列表 -->
   <block wx:if="{{recordsExpanded}}">
-    <view class="record-list">
+    <scroll-view id="recordList" class="record-list" scroll-y="true" scroll-top="{{recordScrollTop}}">
       <block wx:for="{{records}}" wx:key="index">
         <view class="record-item">
           <text class="record-time">{{item.time}}</text>
           <text class="record-desc">{{item.description}}</text>
         </view>
       </block>
-    </view>
+    </scroll-view>
   </block>
 </view>
 
 <!-- 主内容区域 -->
 <scroll-view class="scroll-container" scroll-y="true">
-  <!-- 输入区域 -->
   <input class="finas-input" placeholder="Enter Vehicle Finas" bindinput="inputFinas" />
-
-  <!-- 标签选择区域 -->
   <view class="tag-area">
-    <!-- 标签头部：点击切换整体标签区域展开/收起 -->
     <view class="tag-header" bindtap="toggleTags">
       <text class="title">Choose Tags for New Event</text>
     </view>
-    
-    <!-- 当 tagsExpanded 为 true 时显示各分组 -->
     <block wx:if="{{tagsExpanded}}">
       <!-- TSA/ETSA 分组 -->
       <view class="group">
@@ -41,22 +33,22 @@
         <block wx:if="{{groupExpand.TSA}}">
           <view class="btn-group">
             <view class="action-button {{selectedTags['FN Ramp Speedlimit'] ? 'selected' : 'unselected'}}"
-                  data-text="FN Ramp Speedlimit" 
+                  data-text="FN Ramp Speedlimit"
                   bindtap="toggleTag">
               FN Ramp Speedlimit
             </view>
             <view class="action-button {{selectedTags['FN Highway Speedlimit'] ? 'selected' : 'unselected'}}"
-                  data-text="FN Highway Speedlimit" 
+                  data-text="FN Highway Speedlimit"
                   bindtap="toggleTag">
               FN Highway Speedlimit
             </view>
             <view class="action-button {{selectedTags['Wrong SL at Gantry'] ? 'selected' : 'unselected'}}"
-                  data-text="Wrong SL at Gantry" 
+                  data-text="Wrong SL at Gantry"
                   bindtap="toggleTag">
               Wrong SL at Gantry
             </view>
             <view class="action-button {{selectedTags['Incorrect transition SL'] ? 'selected' : 'unselected'}}"
-                  data-text="Incorrect transition SL" 
+                  data-text="Incorrect transition SL"
                   bindtap="toggleTag">
               Incorrect transition SL
             </view>
@@ -72,79 +64,76 @@
         </view>
         <block wx:if="{{groupExpand.L2Driving}}">
           <view class="sub-groups">
-            <!-- ACC 子分组 -->
             <view class="sub-group">
               <text class="sub-group-title">ACC</text>
               <view class="btn-group">
                 <view class="action-button {{selectedTags['FP brake'] ? 'selected' : 'unselected'}}"
-                      data-text="FP brake" 
+                      data-text="FP brake"
                       bindtap="toggleTag">
                   FP brake
                 </view>
                 <view class="action-button {{selectedTags['Close cut-in'] ? 'selected' : 'unselected'}}"
-                      data-text="Close cut-in" 
+                      data-text="Close cut-in"
                       bindtap="toggleTag">
                   Close cut-in
                 </view>
                 <view class="action-button {{selectedTags[''] ? 'selected' : 'unselected'}}"
-                      data-text="ACC 3" 
+                      data-text="ACC 3"
                       bindtap="toggleTag">
                   ACC 3
                 </view>
                 <view class="action-button {{selectedTags['ACC 4'] ? 'selected' : 'unselected'}}"
-                      data-text="ACC 4" 
+                      data-text="ACC 4"
                       bindtap="toggleTag">
                   ACC 4
                 </view>
               </view>
             </view>
-            <!-- ALSA 子分组 -->
             <view class="sub-group">
               <text class="sub-group-title">ALSA</text>
               <view class="btn-group">
                 <view class="action-button {{selectedTags['wrong bias'] ? 'selected' : 'unselected'}}"
-                      data-text="wrong bias" 
+                      data-text="wrong bias"
                       bindtap="toggleTag">
                   Wrong bias
                 </view>
                 <view class="action-button {{selectedTags['handsoff'] ? 'selected' : 'unselected'}}"
-                      data-text="handsoff" 
+                      data-text="handsoff"
                       bindtap="toggleTag">
                   handsoff
                 </view>
                 <view class="action-button {{selectedTags['ALSA 3'] ? 'selected' : 'unselected'}}"
-                      data-text="ALSA 3" 
+                      data-text="ALSA 3"
                       bindtap="toggleTag">
                   ALSA 3
                 </view>
                 <view class="action-button {{selectedTags['ALSA 4'] ? 'selected' : 'unselected'}}"
-                      data-text="ALSA 4" 
+                      data-text="ALSA 4"
                       bindtap="toggleTag">
                   ALSA 4
                 </view>
               </view>
             </view>
-            <!-- ALCA 子分组 -->
             <view class="sub-group">
               <text class="sub-group-title">ALCA</text>
               <view class="btn-group">
                 <view class="action-button {{selectedTags['FP overtake'] ? 'selected' : 'unselected'}}"
-                      data-text="FP overtake" 
+                      data-text="FP overtake"
                       bindtap="toggleTag">
                   FP overtake
                 </view>
                 <view class="action-button {{selectedTags['FN lane ends'] ? 'selected' : 'unselected'}}"
-                      data-text="FN lane ends" 
+                      data-text="FN lane ends"
                       bindtap="toggleTag">
                   FN lane ends
                 </view>
                 <view class="action-button {{selectedTags['ALCA 3'] ? 'selected' : 'unselected'}}"
-                      data-text="ALCA 3" 
+                      data-text="ALCA 3"
                       bindtap="toggleTag">
                   ALCA 3
                 </view>
                 <view class="action-button {{selectedTags['ALCA 4'] ? 'selected' : 'unselected'}}"
-                      data-text="ALCA 4" 
+                      data-text="ALCA 4"
                       bindtap="toggleTag">
                   ALCA 4
                 </view>
@@ -163,22 +152,22 @@
         <block wx:if="{{groupExpand.L2PlusDriving}}">
           <view class="btn-group">
             <view class="action-button {{selectedTags['FP Lane Change'] ? 'selected' : 'unselected'}}"
-                  data-text="FP Lane Change" 
+                  data-text="FP Lane Change"
                   bindtap="toggleTag">
               FP Lane Change
             </view>
             <view class="action-button {{selectedTags['FN Lane Change'] ? 'selected' : 'unselected'}}"
-                  data-text="FN Lane Change" 
+                  data-text="FN Lane Change"
                   bindtap="toggleTag">
               FN Lane Change
             </view>
             <view class="action-button {{selectedTags['ACC fault'] ? 'selected' : 'unselected'}}"
-                  data-text="ACC fault" 
+                  data-text="ACC fault"
                   bindtap="toggleTag">
               ACC fault
             </view>
             <view class="action-button {{selectedTags['ALSA fault'] ? 'selected' : 'unselected'}}"
-                  data-text="ALSA fault" 
+                  data-text="ALSA fault"
                   bindtap="toggleTag">
               ALSA fault
             </view>
@@ -189,13 +178,14 @@
   </view>
 </scroll-view>
 
-<!-- 固定底部区域 -->
-<view class="fixed-bottom">
+<!-- 固定底部区域，默认底部位置20px，通过动画控制上移 -->
+<view class="fixed-bottom" style="bottom: 20px;" animation="{{animationData}}">
   <view class="voice-area">
     <view class="voice-input-container">
-      <input class="voice-input" placeholder="Audio Text Shown here" value="{{transcribedText}}" bindinput="updateTranscribedText" />
-      <!-- 根据 isRecording 状态动态添加 recording-bg 类 -->
-      <view class="voice-button {{isRecording ? 'recording-bg' : ''}}" bindtouchstart="touchStart" bindtouchend="touchEnd">
+      <input class="voice-input" placeholder="Audio Text Shown here" value="{{transcribedText}}"
+             bindinput="updateTranscribedText" bindfocus="onInputFocus" bindblur="onInputBlur" />
+      <view class="voice-button {{isRecording ? 'recording-bg' : ''}}"
+            bindtouchstart="touchStart" bindtouchend="touchEnd">
       </view>
     </view>
   </view>
