@@ -191,7 +191,7 @@
   </view>
   <view class="bottom-area">
     <view class="add-button" bindtap="addRecord">DaDian</view>
-    <view class="save-button" bindtap="saveRecord">Save</view>
+    <view class="submit-save-button"bindtap="submitAndSaveRecord">Submit&Save</view>
     <view class="output-btn" bindtap="output">Download</view>
   </view>
 </view>

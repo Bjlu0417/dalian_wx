@@ -1,32 +1,27 @@
 Page({
   data: {
-    finas: '',               // 车辆 Finas 号
-    records: [],             // 记录列表
-    transcribedText: '',     // 语音转文字结果
-    selectedTags: {},        // 存储各标签的选中状态（true/false）
-    openid: '',              // 用户的 openid（需通过登录流程获取）
-    isFirstRecord: true,     // 是否是第一次打点
-    isRecording: false,      // 是否正在录音
-    isTranscribing: false,   // 是否正在转译
-    recorderManager: null,   // 录音管理器
-    isEditing: false,        // 是否处于编辑模式
-    key: '',                 // 编辑记录时传入的 key
-    // 分组的展开状态，默认全部收起
+    finas: '',
+    records: [],
+    transcribedText: '',
+    selectedTags: {},
+    openid: '',
+    isFirstRecord: true,
+    isRecording: false,
+    isTranscribing: false,
+    recorderManager: null,
+    isEditing: false,
+    key: '',
     groupExpand: {
       TSA: false,
       L2Driving: false,
       L2PlusDriving: false
     },
-    // 整个标签区域的展开/收起状态，默认展开
     tagsExpanded: true,
-    // 固定顶部记录显示窗口的展开/收起状态，默认折叠
     recordsExpanded: false,
-    // scroll-view 的滚动位置（用于记录列表滚动到最底部）
     recordScrollTop: 0,
-    // 动画对象数据，用于底部区域动画
     animationData: {},
-    // 声波图标（语音按钮）Base64 数据 URL
-    voiceIcon: ''
+    voiceIcon: '',
+    currentRecordTime: '' // 新增字段：记录时间
   },
 
   onLoad(options) {
@@ -132,7 +127,15 @@ Page({
 
   // 添加打点记录：编辑模式下直接追加；否则新建记录时先添加车辆信息记录
   addRecord() {
-    const time = this.getCurrentTime24();
+    const time = this.getCurrentTime24(); // 获取当前时间
+    this.setData({ currentRecordTime: time }); // 记录当前点击时间
+    this.setData({
+      isFirstRecord: false
+    });
+  },
+
+  submitAndSaveRecord() {
+    const time = this.data.currentRecordTime || this.getCurrentTime24(); // 使用 currentRecordTime，若为空则使用当前时间
     let tagPart = '';
     for (let tag in this.data.selectedTags) {
       if (this.data.selectedTags[tag]) {
@@ -140,39 +143,31 @@ Page({
       }
     }
     if (tagPart) {
-      tagPart = tagPart.slice(0, -2) + ' ';
+      tagPart = tagPart.slice(0, -2) + ' '; // 清除最后的逗号和空格
     }
-    const descriptionText = this.data.transcribedText || '';
-    const description = tagPart + (descriptionText ? descriptionText : '');
-    let records = this.data.records;
-
-    if (this.data.isEditing) {
-      records.push({ time, description });
-    } else {
-      if (this.data.isFirstRecord) {
-        const date = this.getCurrentDate();
-        records.push({ time: `${date} Finas: ${this.data.finas}`, description: '' });
-        this.setData({ isFirstRecord: false });
-      }
-      records.push({ time, description });
-    }
-
+    const descriptionText = this.data.transcribedText || ''; // 获取描述文本
+    const description = tagPart + (descriptionText ? descriptionText : ''); // 拼接描述
+    const records = this.data.records; // 获取现有记录
+    records.push({ time, description }); // 添加新记录
     this.setData({
       records,
-      transcribedText: '',
-      selectedTags: {}
+      transcribedText: '', // 清空输入框
+      selectedTags: {}, // 清空选中的标签
+      currentRecordTime: '' // 清空记录时间
     });
+    this.saveRecord(); // 保存记录
   },
 
   // 保存记录到本地缓存
   saveRecord() {
     let key = this.data.key;
     if (!this.data.isEditing) {
-      key = 'record_' + new Date().toLocaleString();
+      key = 'record_' + new Date().toLocaleString(); // 使用当前时间戳作为键
     }
     wx.setStorageSync(key, { finas: this.data.finas, records: this.data.records });
     wx.showToast({ title: '保存成功', icon: 'success' });
   },
+
 
   // 录音前检查权限并启动录音
   checkRecordPermissionAndStart() {

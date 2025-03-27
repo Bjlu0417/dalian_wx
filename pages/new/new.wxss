@@ -281,6 +281,15 @@ view, input {
   text-align: center;
 }
 .add-button { background-color: #28a745; }
-.save-button { background-color: #17a2b8; }
+/* 新增的 Submit&Save 按钮样式 */
+.submit-save-button {
+  font-size: 14px;
+  line-height: 20px; /* 设置按钮文本为两行 */
+  padding: 10px 0;
+  background-color: #17a2b8;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+}
 .output-btn { background-color: #ffc107; }
 
